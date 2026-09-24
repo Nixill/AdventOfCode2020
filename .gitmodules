@@ -4,3 +4,6 @@
 [submodule "adventofcoderunner"]
 	path = adventofcoderunner
 	url = https://github.com/Nixill/AdventOfCodeRunner.git
+[submodule "nixill"]
+	path = nixill
+	url = https://github.com/Nixill/Python-Nixill
