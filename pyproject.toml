@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
-    "nixill",
+    "adventofcoderunner",
 ]
 
 [project.scripts]
@@ -21,7 +21,8 @@ build-backend = "uv_build"
 [tool.uv.workspace]
 members = [
     "nixill",
+    "adventofcoderunner",
 ]
 
 [tool.uv.sources]
-nixill = { workspace = true }
+adventofcoderunner = { workspace = true }
