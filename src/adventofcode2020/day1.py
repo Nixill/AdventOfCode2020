@@ -1,4 +1,4 @@
-from adventofcode2020 import dayrunner
+from adventofcoderunner import dayrunner
 
 def find_product_for_sum(nums: list[int], sum: int, count: int) -> int:
   result = find_product_for_sum_r(nums, sum, count)
