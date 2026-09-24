@@ -1,0 +1,6 @@
+[submodule "data"]
+	path = data
+	url = https://github.com/Nixill/AoC2020Data.git
+[submodule "nixill"]
+	path = nixill
+	url = https://github.com/Nixill/Python-Nixill.git
