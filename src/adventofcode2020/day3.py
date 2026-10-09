@@ -27,10 +27,10 @@ class Day3(dayrunner.DayCode):
 
     for l in self.input.all_lines():
       for r in runs:
-        r.x = (r.x + r.deltaX) % width
         r.y = (r.y + 1) % r.deltaY
 
         if r.y == 0:
+          r.x = (r.x + r.deltaX) % width
           if l[r.x] == '#':
             r.trees += 1
 
