@@ -33,7 +33,7 @@ class Day2(dayrunner.DayCode):
     p2 = 0
 
     for p in passwords:
-      if p.password_letter_count >= p.min_chars and p.password_letter_count <= p.min_chars:
+      if p.password_letter_count >= p.min_chars and p.password_letter_count <= p.max_chars:
         p1 += 1
 
         # This is a guess as to what part 2 is! :D
