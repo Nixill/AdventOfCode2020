@@ -27,8 +27,8 @@ class Day2Line:
     return letter_count >= self.min_chars and letter_count <= self.max_chars
 
   def passes_part_2(self) -> bool:
-    left_letter = self.password[self.min_chars + 1]
-    right_letter = self.password[self.max_chars + 1]
+    left_letter = self.password[self.min_chars - 1]
+    right_letter = self.password[self.max_chars - 1]
 
     return (left_letter == self.letter) != (right_letter == self.letter)
 
