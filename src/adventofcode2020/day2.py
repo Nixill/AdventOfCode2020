@@ -11,8 +11,6 @@ class Day2Line:
   max_chars: int
   letter: str
   password: str
-  password_length: int
-  password_letter_count: int
 
   def __init__(self, line: str):
     match = day2_regex.match(line)
@@ -23,26 +21,24 @@ class Day2Line:
     self.max_chars = int(match.group(2))
     self.letter = match.group(3)
     self.password = match.group(4)
-    self.password_length = len(self.password)
-    self.password_letter_count = len([a for a in self.password if a == self.letter])
+
+  def passes_part_1(self) -> bool:
+    letter_count = len([l for l in self.password if l == self.letter])
+    return letter_count >= self.min_chars and letter_count <= self.max_chars
+
+  def passes_part_2(self) -> bool:
+    left_letter = self.password[self.min_chars + 1]
+    right_letter = self.password[self.max_chars + 1]
+
+    return (left_letter == self.letter) != (right_letter == self.letter)
 
 class Day2(dayrunner.DayCode):
   def run(self) -> dayrunner.RunResult:
     passwords = [Day2Line(l) for l in self.input.all_lines()]
-    p1 = 0
-    p2 = 0
-
-    for p in passwords:
-      if p.password_letter_count >= p.min_chars and p.password_letter_count <= p.max_chars:
-        p1 += 1
-
-        # This is a guess as to what part 2 is! :D
-        if p.password_length >= p.min_chars and p.password_length <= p.max_chars:
-          p2 += 1
 
     return dayrunner.RunResult(
-      part_1_answer=p1,
-      part_2_answer=p2,
+      part_1_answer=len([p for p in passwords if p.passes_part_1()]),
+      part_2_answer=len([p for p in passwords if p.passes_part_2()]),
     )
 
 if __name__ == '__main__':
