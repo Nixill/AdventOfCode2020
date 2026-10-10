@@ -90,7 +90,8 @@ class Day4(dayrunner.DayCode):
 
       if pp.is_loosely_valid():
         valid_p1 += 1
-        if pp.is_strictly_valid():
+        validity, reason = pp.is_strictly_valid()
+        if validity:
           valid_p2 += 1
 
     return dayrunner.RunResult(
