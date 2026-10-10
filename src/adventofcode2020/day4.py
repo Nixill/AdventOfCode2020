@@ -3,16 +3,10 @@ from dataclasses import dataclass
 
 from adventofcoderunner import dayrunner
 
-def try_int(d: dict[str, str], k: str) -> int | None:
+def try_int(text: str) -> int | None:
   try:
-    return int(d[k])
-  except ValueError, KeyError:
-    return None
-
-def try_str(d: dict[str, str], k: str) -> str | None:
-  try:
-    return d[k]
-  except KeyError:
+    return int(text)
+  except ValueError:
     return None
 
 color_regex = re.compile(r'^#[0-9a-fA-F]{6}$')
@@ -20,14 +14,29 @@ height_regex = re.compile(r'^\d+(in|cm)$')
 
 @dataclass(frozen=True)
 class Day4Passport:
-  birth_year: int | None
-  issue_year: int | None
-  expiry_year: int | None
-  height: str | None
-  hair_color: str | None
-  eye_color: str | None
-  passport_id: int | None
-  country_id: int | None
+  byr: str = ''
+  '''Birth year'''
+
+  iyr: str = ''
+  '''Issue year'''
+
+  eyr: str = ''
+  '''Expiration year'''
+
+  hgt: str = ''
+  '''Height'''
+
+  hcl: str = ''
+  '''Hair color'''
+
+  ecl: str = ''
+  '''Eye color'''
+
+  pid: str = ''
+  '''Passport ID'''
+
+  cid: str = ''
+  '''Country ID'''
 
   @staticmethod
   def parse_passport(text: str) -> Day4Passport:
@@ -35,42 +44,41 @@ class Day4Passport:
     kvps = [t.split(':') for t in fields]
     d = {t[0]: t[1] for t in kvps}
 
-    return Day4Passport(
-      birth_year=try_int(d, 'byr'),
-      issue_year=try_int(d, 'iyr'),
-      expiry_year=try_int(d, 'eyr'),
-      height=try_str(d, 'hgt'),
-      hair_color=try_str(d, 'hcl'),
-      eye_color=try_str(d, 'ecl'),
-      passport_id=try_int(d, 'pid'),
-      country_id=try_int(d, 'cid')
-    )
+    return Day4Passport(**d)
 
   def is_loosely_valid(self) -> bool:
-    return (self.birth_year is not None
-      and self.expiry_year is not None
-      and self.eye_color is not None
-      and self.hair_color is not None
-      and self.height is not None
-      and self.issue_year is not None
-      and self.passport_id is not None)
+    return bool(self.byr
+      and self.eyr
+      and self.ecl
+      and self.hcl
+      and self.hgt
+      and self.iyr
+      and self.pid)
 
   # A guess at part two!
-  def is_strictly_valid(self) -> bool:
-    return (self.birth_year is not None
-      and self.issue_year is not None
-      and self.birth_year <= self.issue_year
-      and self.issue_year <= 2020
-      and self.expiry_year is not None
-      and self.expiry_year >= 2020
-      and self.eye_color is not None
-      and len(self.eye_color) == 3
-      and self.passport_id is not None
-      and self.hair_color is not None
-      and bool(color_regex.match(self.hair_color))
-      and self.height is not None
-      and bool(height_regex.match(self.height))
-    )
+  def is_strictly_valid(self) -> tuple[bool, str]:
+    if not self.is_loosely_valid(): return False, 'Not even loosely valid'
+    birth_year = try_int(self.byr)
+    if not birth_year: return False, "Birth year isn't number"
+    issue_year = try_int(self.iyr)
+    if not issue_year: return False, "Issue year isn't number"
+    if birth_year > issue_year: return False, "Issued before birth"
+    if issue_year > 2020: return False, "Issued after 2020"
+    expiry_year = try_int(self.eyr)
+    if not expiry_year: return False, "Expiry year isn't number"
+    if expiry_year < 2020: return False, "Expired before 2020"
+    height = height_regex.match(self.hgt)
+    if not height: return False, "Height isn't inches or centimeters"
+    hair_color = color_regex.match(self.hcl)
+    if not hair_color: return False, "Hair color isn't color"
+    eye_color = self.ecl
+    if len(eye_color) != 3: return False, "Eye color isn't color name"
+    passport_id = try_int(self.pid)
+    if not passport_id: return False, "Passport ID isn't number"
+    if self.cid:
+      country_id = try_int(self.cid)
+      if not country_id: return False, "Country ID isn't number"
+    return True, "Success"
 
 class Day4(dayrunner.DayCode):
   def run(self) -> dayrunner.RunResult:
