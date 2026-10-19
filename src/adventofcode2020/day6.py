@@ -17,13 +17,15 @@ class Day6(dayrunner.DayCode):
       Day6Group(lines) for lines in self.input.block_lines_iterable()
     ]
 
-    total = 0
+    union = 0
+    intersection = 0
     for g in groups:
-      total += len(g.question_answers)
+      union += len(g.question_answers)
+      intersection += sum((1 for v in g.question_answers.values() if v == len(g.line_list)))
 
     return dayrunner.RunResult(
-      part_1_answer=total,
-      part_2_answer=None,
+      part_1_answer=union,
+      part_2_answer=intersection,
     )
 
 if __name__ == '__main__':
